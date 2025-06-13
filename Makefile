@@ -11,7 +11,7 @@ SRC := src
 
 all: $(PROJ)
 
-run: $(BIN)/$(PROJ)
+run: $(PROJ)
 	./$<
 	
 clean:
@@ -45,21 +45,23 @@ install-headers:
 # pali e ilo lipu  
 #---------------------------------------------------------------------------------- 
 
-$(PROJ): build-libs install-headers $(BIN)/$(PROJ) 
-
 CFLAGS += -I$(INC)
 CFLAGS += -Wall
-LFLAGS += 
+LFLAGS += -lraylib
 
 SOURCES += src/main.c
+SOURCES += src/draw.c
 
-OBJECTS := $(notdir $(patsubst %.c, %.o, $(SOURCES)))
+OBJECTS := $(patsubst %.c, %.o, $(SOURCES))
 
 $(BIN)/$(PROJ): $(OBJECTS) 
 	mkdir -p $(BIN)
-	$(CC) $(BIN)/$(notdir $^) $(CFLAGS) $(LFLAGS) -o $@
+	cd $(BIN); \
+		$(CC) $(notdir $^) $(CFLAGS) $(LFLAGS) -o $(notdir $@)
 
-$(OBJECTS): %.o : $(SOURCES)
+$(OBJECTS): %.o : %.c
 	mkdir -p $(BIN)
-	$(CC) $(CFLAGS) -c $^ -o $(BIN)/$@
+	$(CC) $(CFLAGS) -c $< -o $(BIN)/$(notdir $@)
 
+$(PROJ): $(BIN)/$(PROJ)
+	mv $(BIN)/$(PROJ) ./
