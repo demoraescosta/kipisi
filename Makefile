@@ -21,7 +21,7 @@ clean:
 # lipu mute
 #---------------------------------------------------------------------------------- 
 
-# Raylib
+# raylib
 
 RAYLIB_OPTS += PLATFORM=PLATFORM_DESKTOP
 
@@ -47,7 +47,8 @@ install-headers:
 
 CFLAGS += -I$(INC)
 CFLAGS += -Wall
-LFLAGS += -lraylib
+LFLAGS += -L.
+LFLAGS += -lraylib -lGL -lm -lpthread -ldl -lrt -lX11
 
 SOURCES += src/main.c
 SOURCES += src/draw.c
@@ -65,3 +66,4 @@ $(OBJECTS): %.o : %.c
 
 $(PROJ): $(BIN)/$(PROJ)
 	mv $(BIN)/$(PROJ) ./
+

@@ -1,20 +1,37 @@
 #include <stdio.h>
-#include "raylib/raylib.h"
 
 #include "sprites.h"
+#include "game.h"
+#include "draw.h"
 
-int main(int argc, char** argv) {
+#define ROWS 32
+#define COLS 28
+
+int main(int argc, char** argv) 
+{
     printf("toki ma!\n");
 
     const unsigned int scale = 4;
 
-    const int logical_width = 32 * SPRITE_SIZE; 
-    const int logical_height = 28 * SPRITE_SIZE; 
-    const int screen_width = 32 * SPRITE_SIZE * scale; 
-    const int screen_height = 28 * SPRITE_SIZE * scale;
+    const int logical_width = ROWS * SPRITE_SIZE; 
+    const int logical_height = COLS * SPRITE_SIZE; 
+    const int screen_width = ROWS * SPRITE_SIZE * scale; 
+    const int screen_height = COLS * SPRITE_SIZE * scale;
     InitWindow(screen_width, screen_height, "kipisi");
 
     Texture2D sitelen_pona = LoadTexture("res/sitelenpona.png");
+
+    Player p = {
+        .x = 0,
+        .y = 0,
+
+        .sprite = SITELEN_JAN
+    };
+
+    GameState state = {
+        .p = p,
+        .sprite_sheet = sitelen_pona,
+    };
 
     SetTargetFPS(60);
     Rectangle sprite_r = { 0 };
@@ -34,25 +51,21 @@ int main(int argc, char** argv) {
     unsigned long long tick = 0;
     while (!WindowShouldClose())
     {
-        tick += 1;
+        if (IsKeyPressed(KEY_RIGHT)) p.x -= 1;
+        if (IsKeyPressed(KEY_LEFT)) p.x += 1;
+        if (IsKeyPressed(KEY_UP)) p.y += 1;
+        if (IsKeyPressed(KEY_DOWN)) p.y -= 1;
+
         BeginTextureMode(target);
-            /* for (int i = 0; i < 16; i++) */
-            /* { */
-            /*     for (int j = 0; j < 16; j++) */
-            /*     { */
-            /*         target_r.x = SPRITE_SIZE * j; */
-            /*         sprite_r.x = SPRITE_SIZE * j; */
-            /*         DrawTexturePro(sitelen_pona, sprite_r, target_r, (Vector2){ 0, 0 }, 0.0f, WHITE); */
-            /*     } */
-            /*     target_r.y = SPRITE_SIZE * i; */
-            /*     sprite_r.y = SPRITE_SIZE * i; */
-            /* } */
-            draw_sprite(sitelen_pona, SITELEN_SOWELI, 0, 0);
+            draw_sprite(state, p.sprite, p.x, p.y);
             ClearBackground(BLACK);
         EndTextureMode();
+
         BeginDrawing();
             DrawTexturePro(target.texture, (Rectangle){ 0, 0, logical_width, -logical_height }, (Rectangle){ 0, 0, screen_width, screen_height }, (Vector2){ 0.0f, 0.0f }, 0.0f, WHITE);
         EndDrawing();
+
+        tick += 1;
     }
 
     UnloadRenderTexture(target);

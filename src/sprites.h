@@ -4,6 +4,8 @@
 
 #define SPRITE_SIZE 8
 
+typedef Rectangle SpriteImage;
+
 #define SITELEN_A (Rectangle){ 0 * SPRITE_SIZE, 0 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE }
 #define SITELEN_AKESI (Rectangle){ 1 * SPRITE_SIZE, 0 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE }
 #define SITELEN_ALA (Rectangle){ 2 * SPRITE_SIZE, 0 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE }
